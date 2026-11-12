@@ -14,6 +14,7 @@ public class BinarySearchTree<T extends Comparable<T>> implements BSTInterface<T
     // Creates an empty Binary Search Tree object
     public BinarySearchTree()
     {
+        
     }
 
     // Returns true if this BST is empty; otherwise, returns false.
