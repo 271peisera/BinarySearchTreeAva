@@ -14,7 +14,7 @@ public class BinarySearchTree<T extends Comparable<T>> implements BSTInterface<T
     // Creates an empty Binary Search Tree object
     public BinarySearchTree()
     {
-        
+        root = null;
     }
 
     // Returns true if this BST is empty; otherwise, returns false.
@@ -26,12 +26,56 @@ public class BinarySearchTree<T extends Comparable<T>> implements BSTInterface<T
     // Returns the number of elements in this BST.
     public int size()
     {
-        return -1;
+        return size(root);
+    }
+
+    private int size(BinaryNode<T> tree){
+        if (tree == null)
+            return 0;
+        List<T> b = new ArrayList<T>();
+        return inorderTraverse(tree, b).length();
     }
 
     // Adds element to this BST. The tree retains its BST property.
     public void add (T element)
     {
+        if(root == null)
+        {
+            root = new BinaryNode<T>(element);
+        }
+        else
+        {
+            BinaryNode<T> current = root;
+            boolean a = true;
+            while(a)
+            {
+                if(element.compareTo(current.getInfo()) > 0)
+                {
+                    if(current.getRight() == null)
+                    {
+                        current.setRight(new BinaryNode<T>(element));
+                        a = false;
+                    }
+                    else
+                    {
+                        current = current.getRight();
+                    }
+                }
+                else if(element.compareTo(current.getInfo()) < 0)
+                {
+                    if(current.getLeft() == null)
+                    {
+                        current.setLeft(new BinaryNode<T>(element));
+                        a = false;
+                    }
+                    else
+                    {
+                        current = current.getLeft();
+                    } 
+                }
+
+            }
+        }
     }
 
     // Returns true if this BST contains an element e such that 
@@ -64,19 +108,22 @@ public class BinarySearchTree<T extends Comparable<T>> implements BSTInterface<T
     // Returns a list of elements from a preorder traversal
     public List<T> preorderTraverse()
     {
-        return null;
+        List<T> a = new ArrayList<>();
+        return preorderTraverse(root, a);
     }
 
     // Returns a list of elements from an inorder traversal
     public List<T> inorderTraverse()
     {
-        return null;
+        List<T> a = new ArrayList<>();
+        return inorderTraverse(root, a);
     }
 
     // Returns a list of elements from a postorder traversal
     public List<T> postorderTraverse()
     {
-        return null;
+        List<T> a = new ArrayList<>();
+        return postorderTraverse(root, a);
     }
 
     // Removes an element e from this BST such that e.compareTo(element) == 0
@@ -87,5 +134,38 @@ public class BinarySearchTree<T extends Comparable<T>> implements BSTInterface<T
     // Restructures this BST to be optimally balanced
     public void balance()
     {
+    }
+
+    private List<T> preorderTraverse(BinaryNode<T> next, List<T> b)
+    {
+        if(next !=null)
+        {
+            b.add(next.getInfo());
+            preorderTraverse(next.getLeft(), b);
+            preorderTraverse(next.getRight(), b);
+        }
+        return b;
+    }
+
+    private List<T> postorderTraverse(BinaryNode<T> next, List<T> b)
+    {
+        if(next !=null)
+        {
+            postorderTraverse(next.getLeft(), b);
+            postorderTraverse(next.getRight(), b);
+            b.add(next.getInfo());
+        }
+        return b;
+    }
+
+    private List<T> inorderTraverse(BinaryNode<T> next, List<T> b)
+    {
+        if(next !=null)
+        {
+            inorderTraverse(next.getLeft(), b);
+            b.add(next.getInfo());
+            inorderTraverse(next.getRight(), b);
+        }
+        return b;
     }
 }
