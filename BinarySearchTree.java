@@ -20,7 +20,7 @@ public class BinarySearchTree<T extends Comparable<T>> implements BSTInterface<T
     // Returns true if this BST is empty; otherwise, returns false.
     public boolean isEmpty()
     {
-        return false;
+        return root == null;
     }
 
     // Returns the number of elements in this BST.
@@ -33,7 +33,7 @@ public class BinarySearchTree<T extends Comparable<T>> implements BSTInterface<T
         if (tree == null)
             return 0;
         List<T> b = new ArrayList<T>();
-        return inorderTraverse(tree, b).length();
+        return inorderTraverse(tree, b).size();
     }
 
     // Adds element to this BST. The tree retains its BST property.
@@ -82,6 +82,17 @@ public class BinarySearchTree<T extends Comparable<T>> implements BSTInterface<T
     // e.compareTo(element) == 0; otherwise, returns false.
     public boolean contains (T element)
     {
+        BinaryNode<T> current = root;
+        while (current != null)
+        {
+            int comparison = element.compareTo(current.getInfo());
+            if (comparison == 0)
+                return true;
+            else if (comparison > 0)
+                current = current.getRight();
+            else
+                current = current.getLeft();
+        }
         return false;
     }
 
@@ -129,6 +140,39 @@ public class BinarySearchTree<T extends Comparable<T>> implements BSTInterface<T
     // Removes an element e from this BST such that e.compareTo(element) == 0
     public void remove (T element)
     {
+        root = remove(root, element);
+    }
+
+    private BinaryNode<T> remove(BinaryNode<T> tree, T element)
+    {
+        if (tree == null)
+            return null;
+
+        int comparison = element.compareTo(tree.getInfo());
+        if (comparison < 0)
+        {
+            tree.setLeft(remove(tree.getLeft(), element));
+        }
+        else if (comparison > 0)
+        {
+            tree.setRight(remove(tree.getRight(), element));
+        }
+        else
+        {
+            if (tree.getLeft() == null)
+                return tree.getRight();
+            if (tree.getRight() == null)
+                return tree.getLeft();
+
+            BinaryNode<T> successor = tree.getRight();
+            while (successor.getLeft() != null)
+                successor = successor.getLeft();
+
+            tree.setInfo(successor.getInfo());
+            tree.setRight(remove(tree.getRight(), successor.getInfo()));
+        }
+
+        return tree;
     }
 
     // Restructures this BST to be optimally balanced
