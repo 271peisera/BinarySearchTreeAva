@@ -39,43 +39,38 @@ public class BinarySearchTree<T extends Comparable<T>> implements BSTInterface<T
     // Adds element to this BST. The tree retains its BST property.
     public void add (T element)
     {
-        if(root == null)
-        {
+        if(root == null){
             root = new BinaryNode<T>(element);
         }
-        else
-        {
-            BinaryNode<T> current = root;
-            boolean a = true;
-            while(a)
-            {
-                if(element.compareTo(current.getInfo()) > 0)
-                {
-                    if(current.getRight() == null)
-                    {
-                        current.setRight(new BinaryNode<T>(element));
-                        a = false;
-                    }
-                    else
-                    {
-                        current = current.getRight();
-                    }
-                }
-                else if(element.compareTo(current.getInfo()) < 0)
-                {
-                    if(current.getLeft() == null)
-                    {
-                        current.setLeft(new BinaryNode<T>(element));
-                        a = false;
-                    }
-                    else
-                    {
-                        current = current.getLeft();
-                    } 
-                }
+        else if (!contains(element)){
+            add(element, root);
+        }
+    }
 
+    private void add(T element, BinaryNode<T> current){
+        boolean left = false;
+        if(element.compareTo(current.getInfo()) < 0){
+            left = true;
+        }
+        if(left){
+            if(current.getLeft() != null){
+                add(element, current.getLeft());
+            }
+            else{
+                BinaryNode<T> b = new BinaryNode<>(element);
+                current.setLeft(b);
             }
         }
+        else{
+            if(current.getRight() != null){
+                add(element, current.getRight());
+            }
+            else{
+                BinaryNode<T> b = new BinaryNode<>(element);
+                current.setRight(b);
+            }
+        }
+            
     }
 
     // Returns true if this BST contains an element e such that 
@@ -178,6 +173,42 @@ public class BinarySearchTree<T extends Comparable<T>> implements BSTInterface<T
     // Restructures this BST to be optimally balanced
     public void balance()
     {
+         
+        List<T> a = new ArrayList<>();
+        a = inorderTraverse(root, a);
+        if(a.size() <= 1)
+        {
+            return;
+        }
+        else
+        {
+            root = null;
+            balance(a, 0, a.size() - 1);
+        }
+    }
+
+    private void balance(List<T> a, int low, int high)
+    {
+        if(low == high)
+        {
+            add(a.get(low));
+        }
+        else if(low == high - 1)
+        {
+            add(a.get(low));
+            add(a.get(high));
+        }
+        else if(low > high)
+        {
+            return;
+        }
+        else
+        {
+            int middle = (low + high)/2;
+            add(a.get(middle));
+            balance(a, low,middle - 1);
+            balance(a, middle + 1,high);
+        }
     }
 
     private List<T> preorderTraverse(BinaryNode<T> next, List<T> b)
